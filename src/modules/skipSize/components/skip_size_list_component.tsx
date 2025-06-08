@@ -18,8 +18,6 @@ export function SkipSizeListComponent({
   initialSelectedSkip = null
 }: SkipSizeListComponentProps) {
 
-// print the skiptypes array to console
-  console.log("Skip kjghiuhkhkljhkjhgkjghkljgjkhgjhgjhgjhgjhgjhggjhg:", skiptypes);
 
   const [selectedSkip, setSelectedSkip] = useState<any>(initialSelectedSkip);
   const [modalOpen, setModalOpen] = useState(initialModalOpen);

@@ -89,7 +89,7 @@ export default function SkipSizeScreen() {
         setStep={setStep} 
       />
       {!skipConfirmed ? (
-      <SkipHireHeadersProps header="Select Skip Size" subheader="Choose the right skip size for your needs">
+      <SkipHireHeadersProps header="Choose Your Skip Size" subheader="Select the skip size that best suits your needs">
       </SkipHireHeadersProps>
       ) : (
         <SkipHireHeadersProps header="Where will the skip be placed?" subheader="This helps us determine if you need a permit for your skip">
