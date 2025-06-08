@@ -4,8 +4,10 @@ export async function fetchSkipTypes() {
   const response = await getSkipTypes();
   const skiptypes = response.data;
 
-  //add a new key value to each object
+  //I had to add the image key to each skiptype based on its size.. had to do this because the skiptypes are not being returned with the image.
   skiptypes.forEach((skiptype: any) => {
+
+    // so i looked at the prototype to dertermine the image url to use
     switch(skiptype.size) {
       case 20:
       case 40:

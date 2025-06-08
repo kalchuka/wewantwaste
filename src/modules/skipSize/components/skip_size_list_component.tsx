@@ -1,27 +1,47 @@
-import React from "react";
+import { Button } from './buttons_components';
+import { useModalInit } from '../hooks/domain_custom_hooks';
 import { useState } from "react";
-import { Heart, Eye, ShoppingCart, X, Banknote, Truck, TrafficCone, TriangleAlert, Weight } from "lucide-react";
+import { ShoppingCart, Banknote, Truck, TrafficCone, TriangleAlert, Weight } from "lucide-react";
 import { SkipHireModal } from './skip_hire_modal';
 
-export function SkipSizeListComponent({ skiptypes = [] }: { skiptypes: any[] }) {
+interface SkipSizeListComponentProps {
+  skiptypes: any[];
+  onSkipConfirm?: (skip: any) => void;
+  initialModalOpen?: boolean; 
+  initialSelectedSkip?: any; 
+}
+
+export function SkipSizeListComponent({ 
+  skiptypes = [], 
+  onSkipConfirm,
+  initialModalOpen = false,
+  initialSelectedSkip = null
+}: SkipSizeListComponentProps) {
 
 // print the skiptypes array to console
   console.log("Skip kjghiuhkhkljhkjhgkjghkljgjkhgjhgjhgjhgjhgjhggjhg:", skiptypes);
 
-  const [modalOpen, setModalOpen] = useState(false);
-  const [selectedSkip, setSelectedSkip] = useState<any>(null);
+  const [selectedSkip, setSelectedSkip] = useState<any>(initialSelectedSkip);
+  const [modalOpen, setModalOpen] = useState(initialModalOpen);
+  
+  // Effect to handle prop changes for modal state
+  useModalInit(initialModalOpen, initialSelectedSkip, setSelectedSkip, setModalOpen);
 
+  const handleOpenModal = (skiptype: any) => {
+    setSelectedSkip(skiptype);
+    setModalOpen(true);
+  };
 
   const addToCart = (id: string) => {
     const skip = skiptypes.find(skip => skip.id === id);
-    setSelectedSkip(skip);
-    setModalOpen(true);
+    if (skip) {
+      handleOpenModal(skip);
+    }
   };
 
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-4">
       <div className="max-w-7xl mx-auto">
-        {/* Skip Types Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
           {skiptypes.map((skiptype) => (
             <div
@@ -39,7 +59,6 @@ export function SkipSizeListComponent({ skiptypes = [] }: { skiptypes: any[] }) 
                 e.currentTarget.style.transform = 'translateY(0) scale(1)';
               }}
             >
-              {/* Skip Type Image */}
               <div className="relative overflow-hidden">
                 <img
                   src={skiptype.image_url}
@@ -47,16 +66,13 @@ export function SkipSizeListComponent({ skiptypes = [] }: { skiptypes: any[] }) 
                   className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
                 />
                 
-                {/* Size Badge - Large modern version */}
                 <div className="absolute top-0 left-0 bg-blue-600/90 text-white px-4 py-2 rounded-br-lg backdrop-blur-sm shadow-lg flex items-center font-bold">
                   <span className="text-3xl mr-1">{skiptype.size}</span>
                   <span className="text-sm uppercase tracking-wide">Yard Skip</span>
                 </div>             
-                {/* Overlay gradient */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </div>
 
-              {/* Skip Type Info */}
               <div className="pl-6 pr-6 pt-3 pb-6">
                 <div className="mb-4 flex justify-between items-center">
                   <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
@@ -71,7 +87,6 @@ export function SkipSizeListComponent({ skiptypes = [] }: { skiptypes: any[] }) 
                   </span>
                 </div>
 
-                {/* Price */}
                 <div className="flex items-center gap-2 mb-4">
                   <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 flex-shrink-0">
                     <Banknote className="w-4 h-4" />
@@ -94,7 +109,7 @@ export function SkipSizeListComponent({ skiptypes = [] }: { skiptypes: any[] }) 
                   </div>
                 )}
 
-                {/* Allowed on Road Status */}
+
                 <div className={`mb-4 flex items-center gap-2   ${
                   skiptype.allowed_on_road 
                     ? ' text-green-700  ' 
@@ -136,18 +151,19 @@ export function SkipSizeListComponent({ skiptypes = [] }: { skiptypes: any[] }) 
                   </div>
                 )}
 
-                {/* Select Skip Button */}
-                <button
+                <Button
+                  variant="primary"
+                  size="md"
+                  icon={ShoppingCart}
+                  fullWidth
                   onClick={(e) => {
                     e.stopPropagation();
                     addToCart(skiptype.id);
-                  }}
-                  className={`w-full py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2
-                    bg-blue-600 hover:bg-blue-700 text-white hover:shadow-lg'`}
-                >
-                  <ShoppingCart className="w-5 h-5" />
-                  Hire This Skip
-                </button>
+                  } }
+                 children={"Hire This Skip"} >
+                  
+                 </Button>
+              
               </div>
             </div>
           ))}
@@ -164,7 +180,16 @@ export function SkipSizeListComponent({ skiptypes = [] }: { skiptypes: any[] }) 
       {modalOpen && selectedSkip && (
         <SkipHireModal 
           selected={[selectedSkip]} 
-          onClose={() => setModalOpen(false)} 
+          onClose={() => setModalOpen(false)}
+          onConfirm={(skipData) => {
+            // Close the modal
+            setModalOpen(false);
+            
+            // Pass the complete skip data up to parent component
+            if (onSkipConfirm) {
+              onSkipConfirm(skipData);
+            }
+          }}
         />
       )}
     </div>
