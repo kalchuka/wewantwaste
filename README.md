@@ -1,5 +1,11 @@
-# React + TypeScript + Vite
-
+# Wewantwaste App.
+# React + TypeScript + Vite Project to hire skip
+-----------------------------------------------------------------------------------------------------------------
+# To run
+  1. clone the project
+  2. from the project root type yarn to install the node modules. (You can use npm install if you dont have yarn to install the node modules)
+  3. type yarn dev to run the development server. (npm run dev if you are not useing yarn)
+     
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:
